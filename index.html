@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Web GL</title>
+    <script
+      type="text/javascript"
+      src="../../GitHub/gl-matrix/dist/gl-matrix-min.js"
+    ></script>
+    <script type="text/javascript">
+      const { mat2, mat3, mat4, vec2, vec3, vec4 } = glMatrix;
+      const glm = glMatrix.glMatrix;
+    </script>
+    <script type="text/javascript" src="Constants.js"></script>
+    <script type="text/javascript" src="Shaders.js"></script>
+    <script type="text/javascript" src="Light.js"></script>
+    <script type="text/javascript" src="Graphics.js"></script>
+    <script type="text/javascript" src="Mesh.js"></script>
+    <script type="text/javascript" src="InputHandler.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+      window.addEventListener('load', main);
+    </script>
+  </head>
+  <body>
+    <div style="display: flex">
+      <div style="flex: 1">
+        <div>Frame rate: <span id="fps"></span></div>
+        <div>
+          <h3>Camera</h3>
+          <div>
+            <span>Position</span>( <span id="positionx"></span>,
+            <span id="positiony"></span>, <span id="positionz"></span> )
+          </div>
+          <div>
+            <span>Direction</span>( <span id="directionx"></span>,
+            <span id="directiony"></span>, <span id="directionz"></span> )
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1">
+        <div>
+          Show Normals: <input type="checkbox" id="showNormalsCheckbox" />
+        </div>
+        <div>
+          <h3>Sun</h3>
+          <div>
+            <span>Time of Day: </span><span id="dayTime"></span> (<span
+              id="sunAngle"
+            ></span
+            >°)
+          </div>
+          <div>
+            <span>Direction</span>( <span id="sundirectionx"></span>,
+            <span id="sundirectiony"></span>, <span id="sundirectionz"></span> )
+          </div>
+        </div>
+      </div>
+    </div>
+    <canvas id="theCanvas" width="1024" height="576"></canvas>
+  </body>
+</html>

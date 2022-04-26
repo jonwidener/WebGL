@@ -1,0 +1,3 @@
+const MOVE_SPEED = 5;
+const KEYBOARD_ROTATE_SPEED = 100;
+const DAY_PERIOD = 30;
