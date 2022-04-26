@@ -23,7 +23,6 @@ class Graphics {
     );
 
     this.meshList = [];
-    this.meshList.push(new Mesh(this.gl, MODEL_DATA));
 
     this.projection = mat4.perspective(
       mat4.create(),

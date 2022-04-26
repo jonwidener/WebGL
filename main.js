@@ -67,6 +67,28 @@ function main() {
     .getElementById('showNormalsCheckbox')
     .addEventListener('click', (event) => (showNormals = event.target.checked));
 
+  document.getElementById('inputFile').addEventListener('change', (event) => {
+    console.log(event);
+    if (event.target.files.length) {
+      for (const file of event.target.files) {
+        console.log(file);
+        const reader = new FileReader();
+        reader.onload = (result) => {
+          if (result.type === 'load') {
+            const contents = result.target.result;
+            try {
+              const modelData = new ObjFileReader(contents);
+              graphics.meshList = [new Mesh(graphics.gl, modelData)];
+            } catch (err) {
+              alert(err);
+            }
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+  });
+
   const updateUI = () => {
     document.getElementById('positionx').innerHTML =
       camera.position[0].toFixed(2);
@@ -120,7 +142,7 @@ function main() {
     const rotationMat = mat4.fromRotation(
       mat4.create(),
       glm.toRadian(sunAngle),
-      vec3.fromValues(0, 0, 1)
+      vec3.normalize(vec3.create(), vec3.fromValues(0.1, 0, 0.9))
     );
     vec4.transformMat4(sunDirection, vec4.fromValues(-1, 0, 0, 1), rotationMat);
     vec3.copy(graphics.light.direction, sunDirection);

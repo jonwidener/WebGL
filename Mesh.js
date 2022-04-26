@@ -3,6 +3,24 @@ class Mesh {
     gl,
     { vertices, vertexFormat, indices, colors, colorFormat, normals }
   ) {
+    console.log({
+      vertices,
+      vertexFormat,
+      indices,
+      colors,
+      colorFormat,
+      normals,
+    });
+    if (
+      !vertices ||
+      !vertexFormat ||
+      !indices ||
+      !colors ||
+      !colorFormat ||
+      !normals
+    ) {
+      throw 'Bad model data';
+    }
     this.gl = gl;
 
     this.vertices = vertices;
@@ -11,6 +29,9 @@ class Mesh {
     this.colors = colors;
     this.colorFormat = colorFormat;
     this.normals = normals;
+    if (!this.normals.length) {
+      this.calculateNormals();
+    }
     this.normalLines = [];
     this.normalLinesVertexCount = 0;
     this.normalLinesColors = [];
@@ -84,6 +105,45 @@ class Mesh {
     );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  }
+
+  calculateNormals() {
+    if (this.vertices.length % (this.vertexFormat * 3) !== 0) {
+      throw 'Non-triangular face :(';
+    }
+    var vec;
+    if (this.vertexFormat === VertexFormat.XY) {
+      vec = vec2;
+    } else if (this.vertexFormat === VertexFormat.XYZ) {
+      vec = vec3;
+    } else if (this.vertexFormat === VertexFormat.XYZW) {
+      vec = vec4;
+    }
+    for (var i = 0; i < this.vertices.length; i += this.vertexFormat * 3) {
+      // todo clean this up for vec2 and vec4
+      const one = vec.fromValues(
+        this.vertices[i + 0],
+        this.vertices[i + 1],
+        this.vertices[i + 2]
+      );
+      const two = vec.fromValues(
+        this.vertices[i + 3],
+        this.vertices[i + 4],
+        this.vertices[i + 5]
+      );
+      const three = vec.fromValues(
+        this.vertices[i + 6],
+        this.vertices[i + 7],
+        this.vertices[i + 8]
+      );
+      const s1 = vec.sub(vec.create(), one, two);
+      const s2 = vec.sub(vec.create(), one, three);
+      const result = vec.cross(vec.create(), s1, s2);
+      vec.normalize(result, result);
+      this.normals.push(result[0], result[1], result[2]);
+      this.normals.push(result[0], result[1], result[2]);
+      this.normals.push(result[0], result[1], result[2]);
+    }
   }
 
   render({ position, color, normal }) {
